@@ -1,9 +1,12 @@
-import unittest
+import testCase
 from Sudoku import *
+from testCase import *
 
 
-class SudokuTest(unittest.TestCase):
+class SudokuTest(testCase.TestCase):
+    def __init__(self):
 
+        self.asserter = None
     def test_change_number(self):
         puzzle = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
                   [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -16,10 +19,17 @@ class SudokuTest(unittest.TestCase):
                   [0, 0, 0, 0, 8, 0, 0, 7, 9]]
 
         game = Sudoku(puzzle)
-        self.assertTrue(game.change_number(0,2,2))
-        self.assertFalse(game.change_number(0, 1, 2))
-        self.assertEqual(game.puzzle[0][2], 2)
-        self.assertEqual(game.puzzle[0][1],3)
+        for i in range(9):
+            for j in range(9):
+                if game.locked_numbers[i][j]:
+                    self.asserter.assertFalse(game.change_number(i, j, 1), msg='change a locked number succeeded')
+                    self.asserter.assertEquals(game.puzzle[i][j], puzzle[i][j])
+                else:
+                    self.asserter.assertTrue(game.change_number(i, j, i), msg="initial check failed")
+                    self.asserter.assertEquals(game.puzzle[i][j], i)
+                    self.asserter.assertTrue(game.change_number(i, j, 0), msg="initial check failed")
+                    self.asserter.assertEquals(game.puzzle[i][j], puzzle[i][j])
+
 
     def test_check_area(self):
         puzzle = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -33,10 +43,10 @@ class SudokuTest(unittest.TestCase):
                   [0, 0, 0, 0, 8, 0, 0, 7, 9]]
 
         game = Sudoku(puzzle)
-        self.assertTrue(game.searches[0].isValid)
+        self.asserter.assertTrue(game.searches[0].isValid)
         game.change_number(0,2,3)
         game.check_area(0)
-        self.assertFalse(game.searches[0].isValid)
+        self.asserter.assertFalse(game.searches[0].isValid)
 
     def test_check_for_win(self):
         puzzle = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -50,11 +60,11 @@ class SudokuTest(unittest.TestCase):
                   [0, 0, 0, 0, 8, 0, 0, 7, 9]]
 
         game = Sudoku(puzzle)
-        self.assertFalse(game.check_for_win())
+        self.asserter.assertFalse(game.check_for_win())
         for i in range(9):
             for j in range(9):
                 game.puzzle[i][j] = 1
-        self.assertTrue(game.check_for_win())
+        self.asserter.assertTrue(game.check_for_win())
 
     def test_check_results(self):
         puzzle = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -68,9 +78,9 @@ class SudokuTest(unittest.TestCase):
                   [0, 0, 0, 0, 8, 0, 0, 7, 9]]
 
         game = Sudoku(puzzle)
-        self.assertTrue(game.check_results([1,2,3]))
-        self.assertFalse(game.check_results([15,2,3]))
+        self.asserter.assertTrue(game.check_results([1,2,3]))
+        self.asserter.assertFalse(game.check_results([15,2,3]))
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(SudokuTest)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    test = SudokuTest()
+    test.run()

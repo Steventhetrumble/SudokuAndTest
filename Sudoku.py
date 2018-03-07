@@ -59,6 +59,7 @@ class Sudoku():
         flag = []
         for i in range(9):
             flag.append(0)
+
         for i in range(self.searches[index].LowRow,self.searches[index].HighRow+1):
             for j in range(self.searches[index].LowCol,self.searches[index].HighCol+1):
                 if self.puzzle[i][j] == 0:
@@ -126,13 +127,14 @@ class Sudoku():
                 continue
 
             if self.change_number(results[0], results[1], results[2] + 1):
+                self.check_puzzle()
+                if self.check_for_win():
+                    print("You Won!!")
+                    break
                 continue
             else:
                 print(Fore.RED + "the starting numbers are locked and can not be modified")
-            self.check_puzzle()
-            if self.check_for_win():
-                print("You Won!!")
-                break
+
 
 
 class SearchArea():
@@ -143,18 +145,18 @@ class SearchArea():
         self.HighCol = HighCol
         self.isValid = True
 
+'''
+if __name__ == "__main__":
+    puzzle = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
+              [6, 0, 0, 1, 9, 5, 0, 0, 0],
+              [0, 9, 8, 0, 0, 0, 0, 6, 0],
+              [8, 0, 0, 0, 6, 0, 0, 0, 3],
+              [4, 0, 0, 8, 0, 3, 0, 0, 1],
+              [7, 0, 0, 0, 2, 0, 0, 0, 6],
+              [0, 6, 0, 0, 0, 0, 2, 8, 0],
+              [0, 0, 0, 4, 1, 9, 0, 0, 5],
+              [0, 0, 0, 0, 8, 0, 0, 7, 9]]
 
-#if __name__ == "__main__":
-#    puzzle = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
-#              [6, 0, 0, 1, 9, 5, 0, 0, 0],
-#              [0, 9, 8, 0, 0, 0, 0, 6, 0],
-#              [8, 0, 0, 0, 6, 0, 0, 0, 3],
-#              [4, 0, 0, 8, 0, 3, 0, 0, 1],
-#              [7, 0, 0, 0, 2, 0, 0, 0, 6],
-#              [0, 6, 0, 0, 0, 0, 2, 8, 0],
-#              [0, 0, 0, 4, 1, 9, 0, 0, 5],
-#              [0, 0, 0, 0, 8, 0, 0, 7, 9]]
-#
-#    game = Sudoku(puzzle)
-#    game.main()
-#
+    game = Sudoku(puzzle)
+    game.main()
+'''
